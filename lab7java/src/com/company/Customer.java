@@ -98,14 +98,6 @@ public class Customer {
                 + getAddress() + "; " + getCreditCardNum() + ":  " + getBalance();
     }
 
-    public Customer(String s) {
-        String pattern = "\\s+|,\\s*|:\\s*|;\\s*";
-        String[] splitResult = s.split(pattern);
-
-        new Customer(Integer.parseInt(splitResult[0]), splitResult[1], splitResult[2], splitResult[3],
-                toDate(splitResult[4]), splitResult[5], Long.parseLong(splitResult[6]), Double.parseDouble(splitResult[7]));
-    }
-
     public Customer toCustomer(String s) {
         String pattern = "\\s+|,\\s*|:\\s*|;\\s*";
         String[] splitResult = s.split(pattern);
