@@ -19,7 +19,7 @@ public class Main {
         List<Customer> customers;
 
         customers = fileWorker.readFile(path);
-        listWorker.printAll(customers);
+        //listWorker.printAll(customers);
 
 
         int menu;
@@ -29,11 +29,15 @@ public class Main {
             System.out.println("1 - вывести всех покупателей;");
             System.out.println("2 - прочитать из файла;");
             System.out.println("3 - записать нового покупателя в файл;");
+            System.out.println("4 - удалить покупателя;");
 
-            System.out.println("4 - поиск по имени;");
-            System.out.println("5 - поиск по интервалу кредитной карты;");
-            System.out.println("6 - должники");
+            System.out.println("5 - поиск по имени;");
+            System.out.println("6 - поиск по интервалу кредитной карты;");
             System.out.println("7 - вывести всех по балансу по возрастанию");
+            System.out.println("8 - должники");
+            System.out.println("9 - список всех дней рождения");
+            System.out.println("10 - для каждого года рождения покупатель с наибольшим балансом");
+
             System.out.println("0 - выход");
             System.out.print("!!Введите: ");
 
@@ -57,8 +61,20 @@ public class Main {
                     fileWorker.writeFile(path, newCust);
                     pause();
                     break;
-                //поиск по имени
+                //удалить элемент
                 case 4:
+                    listWorker.printAll(customers);
+                    System.out.print("Введите id покупателя на удаление: ");
+                    int id = scanner.nextInt();
+                    if(customers.removeIf(customer -> customer.getId() == id)) {
+                        fileWorker.writeFile(path, customers);
+                        System.out.println("Удаление успешно");
+                    }
+                    else System.out.println("Нет такого покупателя");
+                    pause();
+                    break;
+                //поиск по имени
+                case 5:
                     System.out.println("Введите полное имя для поиска:");
                     Scanner sc = new Scanner(System.in);
                     String name = sc.nextLine();
@@ -68,45 +84,14 @@ public class Main {
                     pause();
                     break;
                 //поиск карты по интервалу
-                case 5:
+                case 6:
                     System.out.println("Интервал номеров кредитных карт");
-                    Scanner interval = new Scanner(System.in);
-                    boolean correct;
                     long start = 0, end = 0;
-                    do {
-
-                        try {
-                            System.out.print("Начало: ");
-                            start = Long.parseLong(interval.nextLine());
-                            correct = true;
-                        } catch (NumberFormatException e) {
-                            correct = false;
-                            System.out.println("!!!Пожалуйста, введите правильно");
-                        }
-                    } while (!correct);
-
-                    do {
-                        try {
-                            System.out.print("Конец: ");
-                            end = Long.parseLong(interval.nextLine());
-                            correct = true;
-                        } catch (NumberFormatException e) {
-                            correct = false;
-                            System.out.println("!!!Пожалуйста, введите правильно");
-                        }
-                    } while (!correct);
-
+                    start = inputInterval("Начало: ");
+                    end = inputInterval("Конец: ");
                     List<Customer> searchCredCard = listWorker.searchCredCard(customers, start, end);
                     if (searchCredCard.isEmpty()) System.out.println("Карт в интервале нет");
                     else listWorker.printAll(searchCredCard);
-                    pause();
-                    break;
-                // кол-во и список должников
-                case 6:
-                    List<Customer> debt = listWorker.searchDebt(customers);
-                    System.out.print("Количество должников: ");
-                    System.out.println(debt.size());
-                    listWorker.printAll(debt);
                     pause();
                     break;
                 // сортировка баланса по возрастанию
@@ -114,8 +99,16 @@ public class Main {
                     listWorker.printAll(listWorker.listSort(customers));
                     pause();
                     break;
-                //дни рождения без повторов
+                // кол-во и список должников
                 case 8:
+                    List<Customer> debt = listWorker.searchDebt(customers);
+                    System.out.print("Количество должников: ");
+                    System.out.println(debt.size());
+                    listWorker.printAll(debt);
+                    pause();
+                    break;
+                //дни рождения без повторов
+                case 9:
                     Set<LocalDate> allDate = new HashSet<>();
                     for (Customer customer : customers) {
                         allDate.add(customer.getBirthday());
@@ -125,7 +118,7 @@ public class Main {
                     pause();
                     break;
                 //самый богатый по годам рождения
-                case 9:
+                case 10:
                     Map<Integer, Customer> rich = new HashMap<>();
                     for (Customer customer : customers) {
                         Integer year = customer.getBirthday().getYear();
@@ -157,6 +150,17 @@ public class Main {
         System.out.print("Нажмите любую клавишу для продолжения ");
         scanner.next();
     }
+
+     public long inputInterval(String s) {
+         Scanner interval = new Scanner(System.in);
+             try {
+                 System.out.print(s);
+                 return Long.parseLong(interval.nextLine());
+             } catch (NumberFormatException e) {
+                 System.out.println("!!!Пожалуйста, введите правильно");
+                 return inputInterval(s);
+             }
+     }
 }
 
 
