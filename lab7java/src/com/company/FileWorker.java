@@ -38,8 +38,18 @@ public class FileWorker {
             writer.write(customer.toString());
             writer.newLine();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error writing file");
+        }
+    }
+
+    public void writeFile(Path path, List<Customer> list) {
+        try (BufferedWriter writer = Files.newBufferedWriter(path)){
+            for (Customer customer : list) {
+                writer.write(customer.toString());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.err.println("Error writing file");
         }
     }
 }
-//List<String> lines = Files.readAllLines(path);
