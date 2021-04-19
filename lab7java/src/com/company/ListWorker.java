@@ -1,5 +1,6 @@
 package com.company;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class ListWorker {
@@ -14,8 +15,8 @@ public class ListWorker {
         System.out.println();
     }
 
-    public List<Customer> searchName(List<Customer> list, String name) {
-        List<Customer> searchRes = new ArrayList<>();
+    public ArrayList<Customer> searchName(List<Customer> list, String name) {
+        ArrayList<Customer> searchRes = new ArrayList<>();
         String[] fullName = name.split(" ");
 
         for (Customer customer : list) {
@@ -29,8 +30,8 @@ public class ListWorker {
         return searchRes;
     }
 
-    public List<Customer> searchCredCard(List<Customer> list, long start, long end) {
-        List<Customer> searchRes = new ArrayList<>();
+    public ArrayList<Customer> searchCredCard(List<Customer> list, long start, long end) {
+        ArrayList<Customer> searchRes = new ArrayList<>();
         for (Customer customer : list) {
             long temp = customer.getCreditCardNum();
             if (temp >= start && temp <= end) {
@@ -40,8 +41,8 @@ public class ListWorker {
         return searchRes;
     }
 
-    public List<Customer> searchDebt(List<Customer> list) {
-        List<Customer> debtors = new ArrayList<>();
+    public ArrayList<Customer> searchDebt(List<Customer> list) {
+        ArrayList<Customer> debtors = new ArrayList<>();
 
         for (Customer customer : list) {
             if (customer.getBalance() < 0) debtors.add(customer);
@@ -58,4 +59,24 @@ public class ListWorker {
         return list;
     }
 
+    public Set<LocalDate> setDates(List<Customer> list) {
+        Set<LocalDate> allDate = new HashSet<>();
+        for (Customer customer : list) {
+            allDate.add(customer.getBirthday());
+        }
+        return allDate;
+    }
+
+    public Map<Integer, Customer> richByYear(List<Customer> list) {
+        Map<Integer, Customer> rich = new HashMap<>();
+        for (Customer customer : list) {
+            Integer year = customer.getBirthday().getYear();
+            Customer custV = rich.get(year);
+            if (custV == null) custV = customer;
+            else if (custV.getBalance() < customer.getBalance())
+                custV = customer;
+            rich.put(year, custV);
+        }
+        return rich;
+    }
 }
