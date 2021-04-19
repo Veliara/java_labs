@@ -113,10 +113,7 @@ public class Main {
                     break;
                 //список років народження покупців, зареєстрованих у програмі без повторів
                 case 9:
-                    Set<LocalDate> dates = customers.stream()
-                            .map(Customer::getBirthday)
-                            .collect(Collectors.toSet());
-
+                    Set<LocalDate> dates = listWorker.setDates(customers);
                     System.out.println("Все зарегистрированные даты рождения без повторов:");
                     dates.stream().sorted().forEach(d -> System.out.print(d.format(DateTimeFormatter.ofPattern("d.M.y")) + ", "));
                     System.out.println();
@@ -124,13 +121,7 @@ public class Main {
                     break;
                 //для кожного року народження визначити покупця, що має найбільшу кількість грошей на картці
                 case 10:
-                    Comparator<Customer> bal = Comparator.comparingDouble(Customer::getBalance);
-
-                    Map<Integer, Customer> rich = customers.stream()
-                            .collect(Collectors.groupingBy(Customer::getYear,
-                                    Collectors.reducing(null,
-                                            BinaryOperator.maxBy(Comparator.nullsFirst(bal)))));
-
+                    Map<Integer, Customer> rich = listWorker.richByYear(customers);
                     for (Map.Entry<Integer, Customer> entry : rich.entrySet()) {
                         System.out.println(entry.getKey() + " - " + entry.getValue().toString());
                     }
