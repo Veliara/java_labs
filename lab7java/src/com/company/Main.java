@@ -109,26 +109,14 @@ public class Main {
                     break;
                 //дни рождения без повторов
                 case 9:
-                    Set<LocalDate> allDate = new HashSet<>();
-                    for (Customer customer : customers) {
-                        allDate.add(customer.getBirthday());
-                    }
+                    Set<LocalDate> allDate = listWorker.setDates(customers);
                     System.out.println("Все зарегестрированные даты рождения без повторов:");
                     System.out.println(allDate);
                     pause();
                     break;
                 //самый богатый по годам рождения
                 case 10:
-                    Map<Integer, Customer> rich = new HashMap<>();
-                    for (Customer customer : customers) {
-                        Integer year = customer.getBirthday().getYear();
-                        Customer custV = rich.get(year);
-                        if (custV == null) custV = customer;
-                        else if (custV.getBalance() < customer.getBalance())
-                            custV = customer;
-                        rich.put(year, custV);
-                    }
-
+                    Map<Integer, Customer> rich = listWorker.richByYear(customers);
                     for (Map.Entry<Integer, Customer> entry : rich.entrySet()) {
                         System.out.println(entry.getKey() + " - " + entry.getValue().toString());
                     }
