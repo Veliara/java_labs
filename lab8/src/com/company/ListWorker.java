@@ -55,10 +55,8 @@ public class ListWorker {
 
     //для кожного року народження визначити покупця, що має найбільшу кількість грошей на картці
     public Map<Integer, Customer> richByYear(List<Customer> list) {
-        Comparator<Customer> bal = Comparator.comparingDouble(Customer::getBalance);
         return list.stream()
-                .collect(Collectors.groupingBy(Customer::getYear,
-                        Collectors.reducing(null,
-                                BinaryOperator.maxBy(Comparator.nullsFirst(bal)))));
+                .collect(Collectors.toMap(Customer::getYear, x -> x,
+                        (a, b) -> a.getBalance() > b.getBalance() ? a : b));
     }
 }
